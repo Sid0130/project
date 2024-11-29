@@ -65,7 +65,7 @@ create table reception (
 );
 commit;
 
-drop table reception;
+drop table registration;
 drop table animal;
 drop table owner;
 drop table doctor;
@@ -111,7 +111,7 @@ FOREIGN KEY (owner_id) REFERENCES owner(owner_id)
 ON DELETE CASCADE;
 delete from owner;
 
-DELETE FROM animal WHERE animal_id = 1;
+DELETE FROM doctor WHERE doctor_id = 2;
 
 ALTER TABLE reception
 DROP CONSTRAINT fk_reception_animal_id;
@@ -162,3 +162,31 @@ select * from animal where upper(animal_name) like upper('%s') order by animal_i
 select * from doctor where doctor_id = 1;
 
 ALTER TABLE doctor MODIFY created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL;
+
+sELECT 
+    r.reception_id,
+    a.animal_name, a.animal_type,
+    o.owner_name, o.phone_number,
+    d.doctor_name
+FROM
+    Reception r
+JOIN
+    Animal a ON r.animals_id = a.animal_id
+JOIN
+    Owner o ON r.owners_id = o.owner_id
+JOIN
+    Doctor d ON r.doctors_id = d.doctor_id
+ORDER BY
+    r.reception_id DESC;
+    
+select r.reception_Id, r.appointment_time, r.reception_status,
+r.created_time, r.modified_time,a.animal_name,a.animal_type,o.owner_name,d.doctor_name
+from reception r
+join animal a on r.animals_id = a.animal_id
+join owner o on r.owners_id = o.owner_id
+join doctor d on r.doctors_id = d.doctor_id;
+
+"select a.%s, a.%s, a.%s, a.%s, a.%s, a.%s, a.%s, o.%s "
+			+ "from %s a "
+			+ "join %s o on a.%s = o.%s "
+			+ "order by %s desc",
